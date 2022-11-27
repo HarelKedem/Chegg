@@ -7,32 +7,48 @@ const isValidUrl = require('../../utils/validateURL')
 const status = res => res.ok ? res : null // check res status
 
 /**
- * fetch from url
+ * pushes a url fetch request to rate limited concurrent execution 
  * @param url -
  *   url to fetch
  * @returns json
  *   fetch results
 */
 async function makeCall(url) {
-    if(!isValidUrl(url))
-        throw new Error("Invalid input")
-
-    console.log("url to call: ",url)
-    const options = {
-        method: 'GET',
-        headers: {
-        }
-    };
     try {
-        const res = await fetch(url, options).then(status);
-        const json = res? await res.json() : res;
-        return json;
-    } catch (err) {
-        console.log("url call err :", err.message);
-        return null;
+        return await callLimiter(send, url)
+    } catch (error) {
+        throw new Error('api call limit function failed')
+    }
+ 
+}
+/**
+ * fetch from url
+ * @param url -
+ *   url to fetch
+ * @returns json
+ *   fetch results
+*/
+async function send(url){
+    {
+        if(!isValidUrl(url))
+            throw new Error("Invalid input")
+    
+        console.log("url to call: ",url)
+        const options = {
+            method: 'GET',
+            headers: {
+            }
+        };
+        try {
+            const res = await fetch(url, options).then(status);
+            const json = res? await res.json() : res;
+            return json;
+        } catch (err) {
+            console.log("url call err :", err.message);
+            return null;
+        }
     }
 }
-
 /**
  * cache resolver 
  * @param url -

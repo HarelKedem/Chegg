@@ -1,5 +1,5 @@
 'use strict';
-const {callHandler, callLimiter} = require('./api')
+const {callHandler} = require('./api')
 
 const BASE_URL = 'https://swapi.dev/api/people';
 
@@ -7,7 +7,7 @@ async function getCars(cars_unfilterd){
     console.log("cars request: ", cars_unfilterd)
     let cars = [];
     try{
-        cars_unfilterd.forEach(car => cars.push(callLimiter(callHandler,car)));
+        cars_unfilterd.forEach(car => cars.push(callHandler(car)));
         let filtered_cars = cars ? await Promise.allSettled(cars) : null;
         if(filtered_cars){
             filtered_cars.filter(promise => promise.status === 'fulfilled');
@@ -25,7 +25,7 @@ async function getCars(cars_unfilterd){
  * */
 async function getPerson(url){
     try{
-        const person  = await callLimiter(callHandler,url);
+        const person  = await callHandler(url);
         console.log("person from call handler: ", person);
         if (person && person.vehicles){
             let result = {
@@ -96,7 +96,7 @@ async function getPeople (req,res,next){
     try{
         //iterate next pages
         while (nextPage) {
-        const nextres = await callLimiter(callHandler,nextPage)
+        const nextres = await callHandler(nextPage)
         nextPage = nextres.next
         people = [...people, nextres]
         } 
