@@ -58,7 +58,9 @@ async function getPerson(url){
  * */ 
 async function getById (req,res,next){
     const id = req.params.id;
-    if (!id) return false;
+    if (!id ||typeof(id) != 'number'){
+        res.status(400).send("bad request error 400")
+    }
     try{
         const url =  base_url + `/${id}`  
         console.log("request for person id: ", id);
