@@ -1,7 +1,11 @@
 'use strict';
 const {callHandler} = require('./api')
+const { enviorment, base_url, test_url } = require('../../config');
 
-const BASE_URL = 'https://swapi.dev/api/people';
+//to do :not fully implemented yet
+const getUrlFromEnv = (path='') =>{ 
+    let url = enviorment === 'development' ? base_url + path : test_url + path//should be backwords 
+}
 
 async function getCars(cars_unfilterd){
     console.log("cars request: ", cars_unfilterd)
@@ -56,7 +60,7 @@ async function getById (req,res,next){
     const id = req.params.id;
     if (!id) return false;
     try{
-        const url = BASE_URL + `/${id}`
+        const url =  base_url + `/${id}`  
         console.log("request for person id: ", id);
         const result = await getPerson(url);
         res.status(200).json(result);    
@@ -91,7 +95,7 @@ async function getPagedCar(pag){
 async function getPeople (req,res,next){
     console.log('request for all people')
     let results = [];
-    let nextPage = BASE_URL;
+    let nextPage = base_url;
     let people = [];
     try{
         //iterate next pages

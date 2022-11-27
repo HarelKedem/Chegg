@@ -2,7 +2,7 @@ const http = require("http");
 
 http.get(
   {
-    port: 3000,
+    port: process.env.PORT || 8626,
     hostname: "localhost",
     path: "/api/people",
     headers: {},

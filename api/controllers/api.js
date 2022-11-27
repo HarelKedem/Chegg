@@ -5,7 +5,6 @@ const request = require('../cahce/frequencyCache')
 const semaphore = require('./semaphore')
 const isValidUrl = require('../../utils/validateURL')
 const status = res => res.ok ? res : null // check res status
-
 /**
  * pushes a url fetch request to rate limited concurrent execution 
  * @param url -
