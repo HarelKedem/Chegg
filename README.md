@@ -1,7 +1,8 @@
 # Chegg
- 
-#run npm start
-#or npm test
+
+# install: npm install
+# run:  npm start
+# test: npm test
 
 # with rate limit
 # with least frequent cache
