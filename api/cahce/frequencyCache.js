@@ -6,7 +6,7 @@ const Cache = require('./cache')
     function increaseFrequency(url, res){
         let new_res = res;
         unsetFrequency(new_res.frequency, url);
-        new_res.frequency++;
+        new_res.frequency += 1;
         setFrequency(new_res.frequency, url);
         // Cache.set(url, new_res);
     }
@@ -36,7 +36,7 @@ const Cache = require('./cache')
                 Cache.delete(url);
             });
             frequencies[counter] = [];
-            --counter
+            counter -= 1
         }
     }
     
@@ -111,7 +111,7 @@ const Cache = require('./cache')
             }
                 
         }catch(e){
-                throw new Error("erro setting new tem in cache", e.message)
+                throw new Error("error setting new tem in cache", e.message)
             //    console.log("erro setting new tem in cache", e.message) // Promise.reject(e)
         }    
     }
