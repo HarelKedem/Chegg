@@ -1,6 +1,7 @@
-let express = require('express'), 
-app = express(),
-bodyParser = require('body-parser'); 
+const express = require('express');
+// const helmet = require("helmet");
+const app = express();
+const bodyParser = require('body-parser'); 
 const {errorHandler,clientErrorHandler,logErrors} = require('./utils/errorLog') //custome handlers
 
 app.use(bodyParser.urlencoded({ extended: true }));
