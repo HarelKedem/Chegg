@@ -79,7 +79,7 @@ const Cache = require('./cache')
         if (!Cache.hasSpace()){
             deleteLeastFrequent();
         }
-        let res = {
+        const res = {
             responce: responce,
             frequency: 0
         }
@@ -102,9 +102,9 @@ const Cache = require('./cache')
     async function getSet(url, apiWrapper){
 
         try{
-            res = await apiWrapper(url);
+            const res = await apiWrapper(url);
             if (res){
-                let result = setNew(url,res);
+                const result = setNew(url,res);
                 return result;
             }else{
                 return null;

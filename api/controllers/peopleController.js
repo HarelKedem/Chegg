@@ -12,17 +12,20 @@ async function getCars(cars_unfilterd){
         if(filtered_cars){
             filtered_cars.filter(promise => promise.status === 'fulfilled');
         }
-        let res = filtered_cars.map(promise => promise.value);
+        const res = filtered_cars.map(promise => promise.value);
         return res
     }catch(e){
         console.log(e);
         return null;
     }   
 }
-
+/**
+ * handles route /api/people/:id
+ *  
+ * */
 async function getPerson(url){
     try{
-        let person  = await callLimiter(callHandler,url);
+        const person  = await callLimiter(callHandler,url);
         console.log("person from call handler: ", person);
         if (person && person.vehicles){
             let result = {
@@ -30,19 +33,19 @@ async function getPerson(url){
                 height:person.height,
                 gender: person.gender,
             };
-            let cars = person.vehicles ? await getCars(person.vehicles) : null;
+            const cars = person.vehicles ? await getCars(person.vehicles) : null;
             let f_cars = cars ?cars.filter(car=>car.crew >=2) : null;
             if (f_cars){
                 result = {...result,
                 vehicles: f_cars.map(car => car.name)
-                }
+                };
                 return result;
             }
         }else{
             return false;
         }
     }catch(err){
-        // throw new Error('unable to load person')
+        return null;
     }
 }
 /**
@@ -53,9 +56,9 @@ async function getById (req,res,next){
     const id = req.params.id;
     if (!id) return false;
     try{
-        let url = BASE_URL + `/${id}`
+        const url = BASE_URL + `/${id}`
         console.log("request for person id: ", id);
-        let result = await getPerson(url);
+        const result = await getPerson(url);
         res.status(200).json(result);    
     }catch(err){
         // next(err);
@@ -69,13 +72,13 @@ async function getPagedCar(pag){
     let results = [];
     pag.map(resPage=>{
         resPage.results.map(res=>{
-                     let person = {
-                         name: res.name,
-                         height: res.height,
-                         gender: res.gender,
-                         vehicles: res.vehicles
-                         }
-                      results.push(person);
+            const person = {
+                name: res.name,
+                height: res.height,
+                gender: res.gender,
+                vehicles: res.vehicles
+            }
+            results.push(person);
          }); 
      });
      return results;
@@ -93,21 +96,21 @@ async function getPeople (req,res,next){
     try{
         //iterate next pages
         while (nextPage) {
-        let nextres = await callLimiter(callHandler,nextPage)
+        const nextres = await callLimiter(callHandler,nextPage)
         nextPage = nextres.next
         people = [...people, nextres]
         } 
-        let pag_result = await Promise.all(people);
+        const pag_result = await Promise.all(people);
         results = await getPagedCar(pag_result)
-        let f_res = results ? results.filter(res=> res.vehicles.length>0) :null
+        const f_res = results ? results.filter(res=> res.vehicles.length>0) :null
         //get cars
-        let full_res =  await Promise.all(
+        const full_res =  await Promise.all(
             f_res.map(async(res)=> {res.vehicles = await getCars(res.vehicles); return res})
             );
-        let resolved = full_res.map(person=>{ let p = person; p.vehicles =person.vehicles.map(car=>car.name); return p} )
+        const resolved = full_res.map(person=>{ let p = person; p.vehicles =person.vehicles.map(car=>car.name); return p} )
         res.status(200).json(resolved)
     }catch(err){
-        // next(err)
+        next(err)
     }
 }
  

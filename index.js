@@ -7,13 +7,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Importing route
-let routes = require('./api/routes/peopleRoutes'); 
+const routes = require('./api/routes/peopleRoutes'); 
 
 //Register the route
 routes(app); 
 
 // Get an instance of the express Router
-var router = express.Router();
+const router = express.Router();
 
 // All of our routes will be prefixed with /api
 app.use('/api', router);

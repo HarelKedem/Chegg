@@ -3,7 +3,7 @@
 const fetch = require('node-fetch');
 const request = require('../cahce/frequencyCache')
 const semaphore = require('./semaphore')
-
+const isValidUrl = require('../../utils/validateURL')
 const status = res => res.ok ? res : null // check res status
 
 /**
@@ -14,6 +14,9 @@ const status = res => res.ok ? res : null // check res status
  *   fetch results
 */
 async function makeCall(url) {
+    if(!isValidUrl(url))
+        throw new Error("Invalid input")
+
     console.log("url to call: ",url)
     const options = {
         method: 'GET',
@@ -25,7 +28,7 @@ async function makeCall(url) {
         const json = res? await res.json() : res;
         return json;
     } catch (err) {
-        console.log("call err :", err.message);
+        console.log("url call err :", err.message);
         return null;
     }
 }
@@ -39,13 +42,13 @@ async function makeCall(url) {
 */
 async function callHandler(url){
     try{
-        let cached = await request(url,makeCall);
+        const cached = await request(url,makeCall);
         if(cached){
-            console.log("call to cache result:", cached)
+            // console.log("call to cache result:", cached)
             return cached;
         }
     }catch(err){
-
+        return null
     }
 }
 
@@ -58,7 +61,12 @@ async function callHandler(url){
  *   promise's arguments
 */
 async function callLimiter(func, args){
-    return await semaphore.callFunction(func, args);
+    try{
+        return await semaphore.callFunction(func, args);
+
+    }catch(err){
+        throw new Error(err)
+    }
 };
     
 

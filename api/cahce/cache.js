@@ -19,7 +19,7 @@ class Cache{
      *
     */
     hasSpace(){
-        let res = this.cache.length < this.maxCap ? true : false;
+        const res = this.cache.length < this.maxCap ? true : false;
         return res;
     }
     /**
