@@ -58,7 +58,7 @@ async function getPerson(url){
  * */ 
 async function getById (req,res,next){
     const id = req.params.id;
-    if (!id ||typeof(id) != 'number'){
+    if (!id /*||typeof(id) != 'number'*/){
         res.status(400).send("bad request error 400")
     }
     try{
